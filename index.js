@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express')
+const cors = require('cors')
 const mongoose = require('mongoose')
 mongoose.connect("mongodb://127.0.0.1:27017/subscriptionDB")
 
@@ -7,7 +8,7 @@ const app = express()
 const port = process.env.SERVER_PORT | 3000
 
 app.use(express.json())
-
+app.use(cors())
 const subscriptionRoutes = require('./routes/subscriptionRoute');
 const userRoutes = require('./routes/authRoutes');
 // Routes

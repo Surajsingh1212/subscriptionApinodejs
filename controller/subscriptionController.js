@@ -1,5 +1,6 @@
 const Subscription = require('../models/subscriptionModel');
 const User = require('../models/userModel');
+const Payment = require('../models/paymentHistoryModel'); 
 const razorpayHelper = require('../helpers/razorpayHelper');
 
 async function chooseSubscriptionPlan(req, res) {
@@ -33,6 +34,27 @@ async function chooseSubscriptionPlan(req, res) {
   }
 }
 
+async function recordPaymentStatus(req, res) {
+  const { userId, plan, paymentId, status } = req.body;
+
+  try {
+    // Create a new payment record
+    const newPayment = new Payment({
+      userId: userId,
+      plan: plan,
+      paymentId: paymentId,
+      status: status // 'success' or 'failed'
+    });
+    await newPayment.save();
+
+    res.json({ message: 'Payment status recorded successfully' });
+  } catch (error) {
+    console.error('Error recording payment status:', error);
+    res.status(500).json({ message: 'Failed to record payment status' });
+  }
+}
+
 module.exports = {
-  chooseSubscriptionPlan
+  chooseSubscriptionPlan,
+  recordPaymentStatus
 };
